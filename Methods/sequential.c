@@ -1,4 +1,4 @@
-#include "../headers.h"  // Adjust the path based on your directory structure
+#include "../headers.h" 
 #include <stdlib.h>
 #include <time.h>
 
