@@ -16,16 +16,25 @@ int compressFile(const char* source) {
 }
 
 int cleanupCompressedFiles(const char* directory) {
+    // First attempt to remove all .gz files
     char cleanupCommand[1024];
     snprintf(cleanupCommand, sizeof(cleanupCommand), "rm -rf %s/*.gz", directory);
     int status = system(cleanupCommand);
     if (status != 0) {
         fprintf(stderr, "Failed to cleanup compressed files in directory: %s\n", directory);
-        return -1;
     }
-    return 0;
-}
+    
+    // Specifically target .DS_Store.gz for removal
+    char dsStoreCleanupCmd[1024];
+    snprintf(dsStoreCleanupCmd, sizeof(dsStoreCleanupCmd), "rm -f %s/.DS_Store.gz", directory);
+    status = system(dsStoreCleanupCmd);
+    if (status != 0) {
+        fprintf(stderr, "Failed to remove .DS_Store.gz in directory: %s\n", directory);
+        return -1;  // Return error if unable to remove
+    }
 
+    return 0;  // Return success if all cleanup commands executed
+}
 int main(int argc, char **argv) {
     if (argc < 2) {
         printf("Provide the folder path containing the data files\n");
