@@ -35,6 +35,8 @@ int cleanupCompressedFiles(const char* directory) {
     return 0;  // Return success if all cleanup commands executed
 }
 
+
+
 int main(int argc, char **argv) {
     if (argc < 2) {
         printf("Provide the folder path containing the data files\n");
