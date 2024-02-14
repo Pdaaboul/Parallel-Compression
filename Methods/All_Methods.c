@@ -171,6 +171,40 @@ void nbCoresEqualCompression(char **filesList, const char* directory, int totalF
 
     cleanupCompressedFiles(directory);
 }
+void fixedCoresParallelCompression(char **filesList, const char* directory, int totalFiles) {
+    int nbCores = getNumCPUs();
+    for (int numProcesses = 2; numProcesses <= nbCores; numProcesses++) {
+        printf("Starting fixed %d-Parallel compression...\n", numProcesses);
+        time_t startTime = time(NULL);
+
+        pid_t pids[numProcesses];
+        int filesPerProcess = totalFiles / numProcesses;
+        int extraFiles = totalFiles % numProcesses;
+
+        for (int i = 0; i < numProcesses; i++) {
+            pids[i] = fork();
+            if (pids[i] == 0) { // Child process
+                int start = i * filesPerProcess + (i < extraFiles ? i : extraFiles);
+                int end = start + filesPerProcess + (i < extraFiles ? 1 : 0);
+                for (int j = start; j < end; j++) {
+                    compressFile(filesList[j]);
+                }
+                exit(0); // Child process exits after compressing its subset of files
+            }
+        }
+
+        // Wait for all child processes to finish
+        for (int i = 0; i < numProcesses; i++) {
+            waitpid(pids[i], NULL, 0);
+        }
+
+        time_t endTime = time(NULL);
+        printf("Fixed %d-Parallel compression completed in %.2f seconds.\n", numProcesses, difftime(endTime, startTime));
+
+        // Cleanup compressed files
+        cleanupCompressedFiles(directory);
+    }
+}
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -184,16 +218,18 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-      int totalFiles = 0;
+    int totalFiles = 0;
     for (char **current = filesList; *current != NULL; current++) {
         totalFiles++;
     }
 
     // Call compression methods
-    sequentialCompression(filesList, argv[1]);
-    nParallelCompression(filesList, argv[1]);
+    // sequentialCompression(filesList, argv[1]);
+    // nParallelCompression(filesList, argv[1]);
     nbCoresBatchCompression(filesList, argv[1]);
     nbCoresEqualCompression(filesList, argv[1], totalFiles);
+    fixedCoresParallelCompression(filesList, argv[1], totalFiles);
+
     // Cleanup
     for (char **currentFile = filesList; *currentFile; currentFile++) {
         free(*currentFile);
