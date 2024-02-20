@@ -18,7 +18,7 @@ The Parallel File Compression utility is a modern application designed to levera
 
 2. **Installation**
    - Clone the repository to your local machine.
-   - Follow the setup instructions in the `setup.md` file to configure the environment and dependencies.
+   
 
 3. **Running the Utility**
    - Use the command-line interface to specify the compression task.
@@ -53,9 +53,9 @@ The performance scale-up and the diminishing returns as the number of cores incr
 
 
 - **Graph 1**: Performance improvement with an increasing number of cores
-  - ![Cores vs. Time](./Graphs/graph1.jpg)
+  - ![Cores vs. Time](./Graphs/Graph1.jpg)
 - **Graph 2**: Comparison of different parallelization strategies
-  - ![Strategy Comparison](./Graphs/graph2.jpg)
+  - ![Strategy Comparison](./Graphs/Graph2.jpg)
 
 ### Conclusion
 The Parallel File Compression utility showcases the significant performance enhancements that can be achieved through thoughtful application of parallel computing concepts. By analyzing the results, users can gain valuable insights into how different parallelization strategies can be effectively employed in real-world scenarios.
@@ -65,5 +65,3 @@ The Parallel File Compression utility showcases the significant performance enha
 - It is recommended to work with around 300 files (including duplicates) to have a substantial dataset for analysis.
 - Ensure that your environment is correctly set up to support parallel processing to get accurate performance insights.
 
-## Contributing
-Contributions to improve the utility or extend its capabilities are welcome. Please ensure to follow the project's contribution guidelines provided in `CONTRIBUTING.md`.
